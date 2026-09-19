@@ -1,42 +1,42 @@
-# BEACON 复现代码
+# BEACON Reproduction Code
 
-## 环境
+## Environment
 
-- Python 3.14（Windows 11 验证通过），CPU 即可
-- 安装依赖：
+- Python 3.14 (verified on Windows 11); CPU is sufficient
+- Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## 数据与黑盒
+## Data and Black-Box Models
 
-- 数据集：`Datasets/{PROMISE,NASA,AEEEM,JIRA}/*.arff`
-- 预训练黑盒：`black_model/baseline/models/<pair_dir>/*.joblib`
-  （18 个骨干 × 2 个训练对，直接加载复用，无需训练）
+- Datasets: `Datasets/{PROMISE,NASA,AEEEM,JIRA}/*.arff`
+- Pre-trained black-box models: `black_model/baseline/models/<pair_dir>/*.joblib`
+  (18 backbones x 2 training pairs; load and reuse directly, no training required)
 
-## 用法
+## Usage
 
 ```bash
-# 冒烟：rq1.1 场景、仅 TNB 骨干（串行约 2 分钟）
+# Smoke test: rq1.1 scenario, TNB backbone only (~2 minutes serially)
 python run_experiments.py --scenario smoke
 
-# 指定场景与骨干并行
+# Run a specific scenario with selected backbones in parallel
 python run_experiments.py --scenario rq1.1 --models SupCon_DP,HDP_KS --jobs 4
 
-# 抽样演示（每个场景各跑一小片）
+# Sampling demo (runs a small slice of each scenario)
 python run_sample.py --jobs 8
 
-# 全量复现（主实验 + 消融 + 敏感性）
+# Full reproduction (main experiments + ablation + sensitivity)
 python run_experiments.py --scenario all --jobs 12
 
-# 由已有结果生成汇总表（输出到 results/tables/）
+# Generate summary tables from existing results (output to results/tables/)
 python make_tables.py
 ```
 
-- `--scenario` 可选：`smoke`、`rq1.1`、`rq1.2`、`rq2.1`、`rq2.2`、`rq2.3`
-  （以上五个即 `main`）、`rq4`、`rq5`、`all`
-- `--models` 逗号分隔的骨干名，默认全部 18 个
-- `--jobs` 并行进程数；`--data-root` 指定数据集目录（默认 `Datasets`）
-- 结果按行追加到 `results/raw/<scenario>.csv`，中断后重跑自动跳过已完成行
-- 缓存位于 `results/cache/`（目标特征 + 黑盒输出），重复运行自动复用
+- `--scenario` options: `smoke`, `rq1.1`, `rq1.2`, `rq2.1`, `rq2.2`, `rq2.3`
+  (the five above constitute `main`), `rq4`, `rq5`, `all`
+- `--models`: comma-separated backbone names; defaults to all 18
+- `--jobs`: number of parallel processes; `--data-root`: dataset directory (default `Datasets`)
+- Results are appended row by row to `results/raw/<scenario>.csv`; rerunning after an interruption automatically skips completed rows
+- Caches are stored in `results/cache/` (target features + black-box outputs) and are automatically reused across runs
