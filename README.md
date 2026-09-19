@@ -7,9 +7,10 @@ The codebase is currently being sorted out, cleaned up, and refactored.
 
 We will publish the complete source code, experimental scripts, dataset usage guidance and documentation as soon as possible.
 
-⭐ Star this repository to get notifications once the code is released.
+Star this repository to get notifications once the code is released.
 
 ## Status
 - [ ] Full source code
 - [ ] Experiment scripts
 - [ ] Documentation & Quick‑start guide
+
